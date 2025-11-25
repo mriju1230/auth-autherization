@@ -31,3 +31,21 @@ p.error{
 p.success{
     color: green;
 }
+.menu{
+    width: 500px;
+    margin: 50px auto 100px;
+
+    ul{
+        li{
+            list-style: none;
+        }
+        a{
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #000;
+            margin-bottom: 4px;
+        }
+    }
+}
