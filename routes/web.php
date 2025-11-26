@@ -19,10 +19,10 @@ Route::get('/student-logout', [StudentController::class, 'logout']) -> name('stu
 Route::get('/staff-login', [StaffController::class, 'showLogin']) -> name('staff.login')->middleware('staff-middleware');
 Route::post('/staff-login', [StaffController::class, 'login']) -> name('staff.login');
 
-Route::get('/staff-register', [StaffController::class, 'showRegister']) -> name('staff.register');
+Route::get('/staff-register', [StaffController::class, 'showRegister']) -> name('staff.register')->middleware('staff-middleware');
 Route::post('/staff-register', [StaffController::class, 'register']) -> name('staff.register');
 
-Route::get('/staff-profile', [StaffController::class, 'profile']) -> name('staff.profile');
+Route::get('/staff-profile', [StaffController::class, 'profile']) -> name('staff.profile')->middleware('isStaff');
 
 Route::get('/staff-account', [StaffController::class, 'account']) -> name('staff.account')->middleware('isAccount');
 

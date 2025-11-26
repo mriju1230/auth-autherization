@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\isAccountentMiddleware;
+use App\Http\Middleware\IsStaffMiddleware;
 use App\Http\Middleware\IsUserAlreadyLogin;
 use App\Http\Middleware\IsUserNotLogin;
 use App\Http\Middleware\staffLoggedInMiddleware;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             "not-login" => IsUserNotLogin::class,
             "staff-middleware" =>staffLoggedInMiddleware::class,
             "isAccount" =>isAccountentMiddleware::class,
+            "isStaff" =>IsStaffMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

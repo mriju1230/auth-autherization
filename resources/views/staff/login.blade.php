@@ -16,10 +16,11 @@
         @endif
         <form action="{{ route('staff.login') }}" method="post">
             @csrf
-            <input type="email" placeholder="Email" name="email">
+            <input type="text" placeholder="Email/Username/Cell" name="auth">
             <input type="password" placeholder="Password" name="password">
             <input type="submit" value="Log In">
         </form>
+        <a href="{{ URL::to('/staff-register') }}">Registration</a>
     </div>
 </body>
 </html>

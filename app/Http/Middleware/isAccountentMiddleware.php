@@ -16,14 +16,20 @@ class isAccountentMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::guard('staff') -> user() && Auth::guard('staff')-> user() ->role == 'Account'){
+        $user = Auth::guard('staff')->user();
+
+        if ($user && $user->role === 'Account') {
+            // User is accountant, allow access
             return $next($request);
         }
 
-
-        if(Auth::guard('staff') -> user() && Auth::guard('staff')-> user() ->role != 'Account'){
+        // If logged in but not accountant, redirect to profile
+        if ($user) {
             return redirect('/staff-profile');
         }
+
+        // If not logged in at all, redirect to login
+        return redirect('/staff-login'); // change this to your staff login route
 
     }
 }

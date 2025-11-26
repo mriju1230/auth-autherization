@@ -35,6 +35,7 @@
             <input type="file" name="photo">
             <input type="submit" value="Register">
         </form>
+        <a href="{{ URL::to('/staff-login') }}">Login</a>
     </div>
 </body>
 </html>

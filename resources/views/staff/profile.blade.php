@@ -10,7 +10,9 @@
 <body>
     <div class="menu">
         <ul>
-            <li><a href="">User Create</a></li>
+            @if(in_array(Auth::guard('staff')-> user() ->role, ['Manager', 'Librariyan']))
+                <li><a href='#'>User Create</a></li>
+            @endif
             <li><a href="">Payment System</a></li>
             <li><a href="">Assignment System</a></li>
         </ul>

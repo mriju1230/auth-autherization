@@ -7,31 +7,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class staffLoggedInMiddleware
+class IsStaffMiddleware
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    /**
-     * Handle an incoming request.
-     */
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::guard('staff')->user();
 
-        // If staff is not logged in → allow guest pages (like login)
-        if (!$user) {
+        if ($user && $user->role !== 'Account') {
+            // User is staff (not accountant), allow access
             return $next($request);
         }
-        
-        // If logged in and role is Accountant → redirect to accountant dashboard
-        if ($user->role === 'Account') {
+
+        if ($user && $user->role === 'Account') {
+            // User is accountant, redirect to accountant page
             return redirect('/staff-account');
         }
 
-        // If logged in and NOT accountant → redirect to staff profile
-        return redirect('/staff-profile');
+        // User not logged in, redirect to login
+        return redirect('/staff-login'); // change this to your staff login route
     }
 }

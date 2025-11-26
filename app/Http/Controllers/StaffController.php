@@ -6,6 +6,7 @@ use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Pest\Support\Str;
 
 class StaffController extends Controller
 {
@@ -44,7 +45,7 @@ class StaffController extends Controller
         }
 
         // data store
-        Staff::create([
+        $staffUser = Staff::create([
             "name"          => $request->name,
             "username"      => $request->username,
             "email"         =>  $request->email,
@@ -54,6 +55,9 @@ class StaffController extends Controller
             "password"      =>  Hash::make($request->password),
         ]);
 
+        // now add
+        $staffUser ->activation_token = Str::random(40);
+        $staffUser->save();
 
         // return back
         return back() -> with('success', 'Staff data created successfully!');
@@ -63,19 +67,38 @@ class StaffController extends Controller
     public function login(Request $request){
         //validation
         $credientials = $request->validate([
-            "email" => "required|email|exists:staff",
+            "auth" => "required",
             "password" => "required",
-        ],[
-            "email.exists" => "Email not found!"
         ]);
+        
+        // $credientials = $request->validate([
+        //     "email" => "required|email|exists:staff",
+        //     "password" => "required",
+        // ],[
+        //     "email.exists" => "Email not found!"
+        // ]);
+
+        // check login vars
+        if(filter_var($credientials['auth'], FILTER_VALIDATE_EMAIL)){
+            $credientials['email'] = $request->auth;
+            unset($credientials['auth']);
+        }else if(preg_match('/^[0-9]{11}$/', $request['auth'])){
+            $credientials['cell'] = $request->auth;
+            unset($credientials['auth']);
+        }else{
+            $credientials['username'] = $request->auth;
+            unset($credientials['auth']);
+        }
         
         //auth check 
         if(Auth::guard('staff') -> attempt($credientials)){
             return redirect('/staff-profile');
         }
         
-        // return back
-        return back();
+        // Return back with error
+        return back()->withErrors([
+            'auth' => 'The provided credentials do not match our records.',
+        ])->withInput();
     }
 
     public function logout(){

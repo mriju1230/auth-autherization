@@ -20,6 +20,11 @@ return new class extends Migration
             $table->string('role');
             $table->string('password');
             $table->string('photo')->nullable();
+            $table->boolean('is_active')->default(false);
+            $table->string('activation_token')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('status')->default(true);
+            $table->boolean('trush')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
