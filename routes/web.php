@@ -27,3 +27,6 @@ Route::get('/staff-profile', [StaffController::class, 'profile']) -> name('staff
 Route::get('/staff-account', [StaffController::class, 'account']) -> name('staff.account')->middleware('isAccount');
 
 Route::get('/staff-logout', [StaffController::class, 'logout']) -> name('staff.logout');
+Route::get('/staff-activation/{token}',[StaffController::class, 'activateAccount'])->name('staff.activation');
+Route::get('/staff-otp-activate',[StaffController::class, 'showOTPForm'])->name('staff.otp');
+Route::post('/staff-otp-activate',[StaffController::class, 'showOTPActivate'])->name('staff.otp');

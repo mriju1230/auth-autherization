@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Staff;
+use App\Notifications\StuffAccountActivationNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -57,7 +58,12 @@ class StaffController extends Controller
 
         // now add
         $staffUser ->activation_token = Str::random(40);
+        $staffUser->remember_token = rand(10000, 99999);
+
         $staffUser->save();
+
+        // for notification
+         $staffUser->notify(new StuffAccountActivationNotification($staffUser->name, $staffUser->activation_token, $staffUser->remember_token));
 
         // return back
         return back() -> with('success', 'Staff data created successfully!');
@@ -104,6 +110,47 @@ class StaffController extends Controller
     public function logout(){
         Auth::guard('staff') -> logout();
         return redirect('/staff-login');
+    }
+
+    public function activateAccount($token){
+        // return $token;
+       $activation_user =  Staff::where('activation_token', $token)->first();
+       if(!$activation_user){
+        return "Invalid activation token!";
+       }
+       $activation_user ->is_active = true;
+       $activation_user ->activation_token = NULL;
+       $activation_user->save();
+
+       return redirect('/staff-login')->with('success', 'Your account is activate, Please login');
+    }
+
+    public function showOTPForm(){
+        return view('staff.otp-activation');
+    }
+
+    public function showOTPActivate(Request $request){
+        $request->validate([
+            "otp" => 'required'
+        ]);
+
+        //now check your otp
+        $user_id = Auth::guard('staff')->user()->id;
+        $otp = Auth::guard('staff')->user()->remember_token;
+
+        if($otp != $request->otp){
+            return back()-> with('error', 'Otp not matched!');
+        }
+       
+       // return $token;
+       $activation_user =  Staff::find($user_id);
+
+       $activation_user ->is_active = true;
+       $activation_user ->activation_token = NULL;
+       $activation_user ->activation_token = NULL;
+       $activation_user->save();
+
+       return redirect('/staff-profile')->with('success', 'Your account is activate, Please login');
     }
     
 }

@@ -16,6 +16,10 @@
             <li><a href="">Payment System</a></li>
             <li><a href="">Assignment System</a></li>
         </ul>
+        <br>
+        @if(!Auth::guard('staff')->user()->is_active == true)
+            <p style="color:red; font-weight: bold; text-align: center;">Profile is not activated! <a href="{{ route('staff.otp') }}">Activate with OTP</a></p>
+        @endif
     </div>
     <div class="profile">
         <img src="{{ URL::to('/media/staff/' . Auth::guard('staff') -> user()->photo) }}" alt="{{ Auth::guard('staff')->user()->name }}">

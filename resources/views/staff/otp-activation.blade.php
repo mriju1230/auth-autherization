@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Profile</title>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-
 </head>
 <body>
-    <div class="auth">
-        <h2>Staff Login</h2>
+    <div class="profile otp">
+        <h2>Verify OTP</h2>
         <hr>
         @if ($errors ->any())
             <p class="error">{{ $errors->first() }}</p>
@@ -17,13 +17,14 @@
         @if (Session::has('success'))
             <p class="success">{{ Session::get('success') }}</p>            
         @endif
-        <form action="{{ route('staff.login') }}" method="post">
+        @if (Session::has('error'))
+            <p class="error">{{ Session::get('error') }}</p>            
+        @endif
+        <form action="{{ route('staff.otp') }}" method="post">
             @csrf
-            <input type="text" placeholder="Email/Username/Cell" name="auth">
-            <input type="password" placeholder="Password" name="password">
-            <input type="submit" value="Log In">
+            <input type="text" name="otp">
+            <input type="submit" value="Active Now">
         </form>
-        <a href="{{ URL::to('/staff-register') }}">Registration</a>
     </div>
 </body>
 </html>
